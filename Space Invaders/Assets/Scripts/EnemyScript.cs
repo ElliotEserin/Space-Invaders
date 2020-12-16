@@ -18,7 +18,7 @@ public class EnemyScript : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.velocity = new Vector2(speed, 0);
+        rb.velocity = new Vector2(speed * GameManager.speedMultiplier, 0);
     }
 
     // Update is called once per frame
@@ -30,7 +30,7 @@ public class EnemyScript : MonoBehaviour
             return;
         }
 
-        if(rb.velocity == Vector2.zero) rb.velocity = new Vector2(speed, 0);
+        if(rb.velocity == Vector2.zero) rb.velocity = new Vector2(speed * GameManager.speedMultiplier, 0);
 
         if (speed > 0) hitEdge = transform.position.x >= edge;
         else if (speed < 0) hitEdge = transform.position.x <= -edge;
@@ -43,7 +43,7 @@ public class EnemyScript : MonoBehaviour
             if (!present || presentCountdown > 0)
             {
                 speed = -speed;
-                rb.velocity = new Vector2(speed, 0);
+                rb.velocity = new Vector2(speed * GameManager.speedMultiplier, 0);
             }
 
             if (present)
@@ -62,6 +62,12 @@ public class EnemyScript : MonoBehaviour
         if(collision.tag == "Player")
         {
             Destroy(collision.gameObject);
+            EnemyShoot[] enemies = FindObjectsOfType<EnemyShoot>();
+
+            foreach (var enemy in enemies)
+                if (enemy.enabled == true)    
+                    Destroy(enemy.gameObject);
+
             GameManager.playerDead();
         }
     }

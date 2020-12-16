@@ -12,6 +12,8 @@ public class ShipControl : MonoBehaviour
 
     float shootTimer = 0;
 
+    public bool rapidFire = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +32,11 @@ public class ShipControl : MonoBehaviour
         {
             Instantiate(shot, transform.position, Quaternion.identity);
             shootTimer = timeBetweenShots;
+        }
+
+        if (rapidFire && Input.GetButtonDown("Fire1"))
+        {
+            Instantiate(shot, transform.position, Quaternion.identity);
         }
 
         shootTimer -= Time.deltaTime;

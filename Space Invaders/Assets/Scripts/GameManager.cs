@@ -18,7 +18,9 @@ public class GameManager : MonoBehaviour
     public GameObject[] waves;
     public Transform waveSpawnPoint;
     public int timeBetweenWaves = 20;
-    float waveTimer;
+
+    public static float speedMultiplier = 1f;
+    float speedIncrease = 0.25f;
 
     public static bool pause = false;
 
@@ -29,7 +31,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         highscoreTable = FindObjectOfType<HighscoreTable>();
-        waveTimer = timeBetweenWaves;
 
         isPlayerDead = false;
         loseScreen.SetActive(false);
@@ -44,15 +45,15 @@ public class GameManager : MonoBehaviour
 
         if (isPlayerDead && Input.GetButtonDown("Submit") && loseScreen.activeSelf)
             Restart();
-        if (Input.GetKeyDown(KeyCode.K)) isPlayerDead = true;
 
-        if ((waveTimer <= 0 || FindObjectsOfType<EnemyScript>().Length == 0) && pause == false)
+        //start new wave
+        if ((FindObjectsOfType<EnemyScript>().Length == 0) && pause == false)
         {
+            speedMultiplier += speedIncrease;
             Instantiate(waves[Random.Range(0, waves.Length)], waveSpawnPoint.position, Quaternion.identity);
-            waveTimer = timeBetweenWaves;
         }
-        waveTimer -= Time.deltaTime;
 
+        //player death
         if(isPlayerDead)
         {
             pause = true;
